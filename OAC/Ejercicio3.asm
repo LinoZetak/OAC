@@ -17,8 +17,8 @@ section .data
     S1 : db "Ingrese Primer Segmento: " ,0
     S2 : db "Ingrese Segundo Segmento: " ,0
     S3 : db "Ingrese Tercer Segmento: " ,0
-    Yes : db "Se puede formar un triángulo?: Si" , 0 , 10
-    No : db "Se puede formar un triángulo?: No" , 0 , 10
+    Yes : db "Se puede formar un triángulo?: Si" , 0 
+    No : db "Se puede formar un triángulo?: No" , 0 
 
 
 section .text
@@ -34,73 +34,42 @@ _start:
 
     PutStr S3
     GetInt cx
+    ;Sumar dos segmentos
 
-    ; Econtrar el Segmento mayor
+    mov dx, ax ;preservar el valor de ax
 
-    cmp ax, bx  ;sólo afecta flags del registro de banderas
+    add dx, bx 
 
+    cmp cx, dx
+    jae noCumple
 
-    ja mayorax
+    ; SI S3 < S1 + S2
 
-    cmp bx,cx
+    mov dx , bx ; prservar el valor de bx
 
-    ja mayorbx
+    add dx, cx
+    cmp ax, dx
+    jae noCumple
 
-    PutInt cx
+    ;Si  S1 < S2 + S3
 
-    ;Suma de los dos segmentos menores
-    add ax,bx
-
-    cmp cx, ax
-
-    ja siPuede
-
-    PutStr No
-
-    jmp final  
-
-
-mayorax:
-    cmp ax, cx
-    ja mayoraxx
-
-
-mayoraxx:
-    PutInt ax
-    jmp final 
-
-
-    ;Suma de los dos segmentos menores
-    add bx,cx
-
-    cmp ax, bx
-
-    ja siPuede
-
-    PutStr No
-
-    jmp final 
-
-
-
-
-mayorbx:
-    PutInt bx
-    jmp final 
-
-    ;Suma de los dos segmentos menores
-    add ax,cx
-
+    add ax, cx
+    
     cmp bx, ax
+    jae noCumple
 
-    ja siPuede
+    ;Si S2 < S1 + S3
 
-    PutStr No
-
+    PutStr Yes
     jmp final
 
-siPuede:
-    PutStr Yes
+
+
+; Si algun segmento es mayor a la suma  de los otros dos segmentos
+noCumple:
+    PutStr No
+
+
 
 final:
     nwln       ; Nueva línea
